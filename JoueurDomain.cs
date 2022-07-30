@@ -1,4 +1,5 @@
-﻿using RepartitionTournoi.DAL.Interfaces;
+﻿using RepartitionTournoi.DAL.Entities;
+using RepartitionTournoi.DAL.Interfaces;
 using RepartitionTournoi.Models;
 
 namespace RepartitionTournoi.Domain;
@@ -11,25 +12,39 @@ public class JoueurDomain : IJoueurDomain
         _joueurDAL = joueurDAL;
     }
 
-    public IEnumerable<Joueur> All()
+    public async Task<IEnumerable<JoueurDTO>> GetAll()
     {
-        return _joueurDAL.All();
+        var joueurDTOs = await _joueurDAL.GetAll();
+        return joueurDTOs.Select(x => new JoueurDTO(x.Id, x.Nom, x.Prénom, x.Telephone));
     }
-    public Joueur GetById(int id)
+    public async Task<JoueurDTO> GetById(long id)
     {
-        return _joueurDAL.GetById(id);
+        var x = await _joueurDAL.GetById(id);
+        return new JoueurDTO(x.Id, x.Nom, x.Prénom, x.Telephone);
     }
-    private Random rnd = new Random();
+    public async Task<JoueurDTO> Create(JoueurDTO joueurDTO)
+    {
+        Joueur joueur = await _joueurDAL.Create(new Joueur()
+        {
+            Id = joueurDTO.Id,
+            Nom = joueurDTO.Nom,
+            Prénom = joueurDTO.Prénom,
+            Telephone = joueurDTO.Téléphone
+        });
+        return new JoueurDTO(joueur.Id, joueur.Nom, joueur.Prénom, joueur.Telephone);
+    }
 
-    public List<Joueur> GetRandomJoueurs()
+    public async Task<List<JoueurDTO>> GetRandomJoueurs()
     {
-        List<Joueur> resultList = All().ToList();
+        var all = await GetAll();
+        List<JoueurDTO> resultList = all.ToList();
         Shuffle(resultList);
         return resultList;
     }
 
     private void Shuffle<T>(IList<T> list)
     {
+        Random rnd = new Random();
         int n = list.Count;
         while (n > 1)
         {
@@ -39,6 +54,22 @@ public class JoueurDomain : IJoueurDomain
             list[k] = list[n];
             list[n] = value;
         }
+    }
+
+    public async Task<JoueurDTO> Update(JoueurDTO joueurDTO)
+    {
+        return _joueurDAL.Convert(await _joueurDAL.Update(new Joueur()
+        {
+            Id = joueurDTO.Id,
+            Nom = joueurDTO.Nom,
+            Prénom = joueurDTO.Prénom,
+            Telephone = joueurDTO.Téléphone
+        }));
+    }
+
+    public async Task Delete(long id)
+    {
+        await _joueurDAL.DeleteById(id);
     }
 
 }

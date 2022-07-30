@@ -4,8 +4,8 @@ namespace RepartitionTournoi.Domain
 {
     public interface ITournoiDomain
     {
-        IEnumerable<Match> Chunk(IEnumerable<Joueur> joueurs, int chunk);
-        int GetGroupSize(IEnumerable<Joueur> joueurs);
+        IEnumerable<MatchDTO> Chunk(IEnumerable<JoueurDTO> joueurs, int chunk);
+        int GetGroupSize(IEnumerable<JoueurDTO> joueurs);
 
     }
 }

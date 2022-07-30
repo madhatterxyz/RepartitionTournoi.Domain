@@ -18,19 +18,19 @@ namespace RepartitionTournoi.Domain
         /// Pour chaque jeu, je veux une composition des groupes différente d'une existante
         /// </summary>
         /// <returns></returns>
-        public List<Composition> GetCompositions()
+        public async Task<List<CompositionDTO>> InitCompositions()
         {
-            List<Composition> compositions = new List<Composition>();
-            IEnumerable<Joueur> joueurs = _joueurDomain.GetRandomJoueurs();
+            List<CompositionDTO> compositions = new List<CompositionDTO>();
+            IEnumerable<JoueurDTO> joueurs = await _joueurDomain.GetRandomJoueurs();
             int chunkSize = _tournoiDomain.GetGroupSize(joueurs);
-            var comparer = new ObjectsComparer.Comparer<IEnumerable<Match>>();
-            foreach (Jeu jeu in _jeuDAL.All())
+            var comparer = new ObjectsComparer.Comparer<IEnumerable<MatchDTO>>();
+            foreach (var jeu in await _jeuDAL.GetAll())
             {
-                Composition composition = new Composition() { Jeu = jeu };
-                IEnumerable<Match> groupes = _tournoiDomain.Chunk(joueurs, chunkSize);
-                while (compositions.Any(x => comparer.Compare(x.Matchs , groupes)))
+                CompositionDTO composition = new CompositionDTO() { Jeu = new JeuDTO(jeu.Id, jeu.Nom, jeu.NbJoueursMin, jeu.NbJoueursMax) };
+                IEnumerable<MatchDTO> groupes = _tournoiDomain.Chunk(joueurs, chunkSize);
+                while (compositions.Any(x => comparer.Compare(x.Matchs, groupes)))
                 {
-                    groupes = _tournoiDomain.Chunk(_joueurDomain.GetRandomJoueurs(), chunkSize);
+                    groupes = _tournoiDomain.Chunk(await _joueurDomain.GetRandomJoueurs(), chunkSize);
                 }
                 if (!compositions.Any(x => x.Matchs == groupes))
                     composition.Matchs = groupes;

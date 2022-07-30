@@ -4,6 +4,6 @@ namespace RepartitionTournoi.Domain
 {
     public interface ICompositionDomain
     {
-        List<Composition> GetCompositions();
+        Task<List<CompositionDTO>> InitCompositions();
     }
 }
