@@ -26,14 +26,13 @@ public class JoueurDomain : IJoueurDomain
     {
         Joueur joueur = await _joueurDAL.Create(new Joueur()
         {
-            Id = joueurDTO.Id,
             Nom = joueurDTO.Nom,
             Prénom = joueurDTO.Prénom,
             Telephone = joueurDTO.Téléphone
         });
         return new JoueurDTO(joueur.Id, joueur.Nom, joueur.Prénom, joueur.Telephone);
     }
-
+    //Un
     public async Task<List<JoueurDTO>> GetRandomJoueurs()
     {
         var all = await GetAll();
