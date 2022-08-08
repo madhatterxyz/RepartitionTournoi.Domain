@@ -1,6 +1,6 @@
 ﻿using RepartitionTournoi.Models;
 
-namespace RepartitionTournoi.Domain;
+namespace RepartitionTournoi.Domain.Interfaces;
 
 public interface IJoueurDomain
 {

@@ -11,7 +11,11 @@ namespace RepartitionTournoi.Domain
         public static IServiceCollection RegisterDALServices(this IServiceCollection services)
         {
             services.AddScoped<IJeuDAL, JeuDAL>();
+            services.AddScoped<ITournoiDAL, TournoiDAL>();
             services.AddScoped<IJoueurDAL, JoueurDAL>();
+            services.AddScoped<IMatchDAL,MatchDAL>();
+            services.AddScoped<ICompositionDAL, CompositionDAL>();
+            services.AddScoped<IScoreDAL, ScoreDAL>();
             services.AddDbContext<RepartitionTournoiContext>(
                 options => options.UseSqlServer("name=ConnectionStrings:RepartitionTournoiContext"));
 
