@@ -1,5 +1,6 @@
 ﻿using RepartitionTournoi.DAL.Entities;
 using RepartitionTournoi.DAL.Interfaces;
+using RepartitionTournoi.Domain.Interfaces;
 using RepartitionTournoi.Models;
 
 namespace RepartitionTournoi.Domain;
